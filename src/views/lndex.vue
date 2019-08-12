@@ -51,9 +51,12 @@
               <MenuItem name="1-3" to="/index/Authoritymanage"
                 ><Icon type="md-contacts" size="20" />权限管理</MenuItem
               >
-              <MenuItem name="1-4"
-                ><Icon type="ios-globe" size="20" />待添加</MenuItem
-              >
+              <!-- <MenuItem
+                v-for="(item, index) in menuArr"
+                name="1-1"
+                :to="item.url"
+              >{{item.}}</MenuItem
+              > -->
             </Submenu>
             <Submenu name="2">
               <template slot="title">
@@ -104,7 +107,7 @@ export default {
     };
   },
   computed: {
-    menuitemClasses: function() {
+    menuitemClasses() {
       return ['menu-item', this.isCollapsed ? 'collapsed-menu' : ''];
     }
   },
@@ -119,6 +122,15 @@ export default {
         this.menuArr.findIndex(item => item.url == '/index/Usermanage') != -1
       ) {
         return 1;
+      } else if (
+        this.menuArr.findIndex(item => item.url == '/index/Rolemanage') != -1
+      ) {
+        return 2;
+      } else if (
+        this.menuArr.findIndex(item => item.url == '/index/Authoritymanage') !=
+        -1
+      ) {
+        return 3;
       }
     }
   },

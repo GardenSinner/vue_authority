@@ -21,7 +21,7 @@
       :data="userArr"
       @on-selection-change="selBack"
     >
-      <template slot-scope="{ row, index }" slot="id">
+      <template slot-scope="{ row }" slot="id">
         <!-- <Input v-if="editIndex == index" type="text" v-model="editId" /> -->
         <span>{{ row.id }}</span>
       </template>
@@ -81,7 +81,7 @@
       :current="pageNum"
       @on-change="changePage"
     />
-    <Drawer
+    <!-- <Drawer
       title="添加用户"
       :closable="true"
       v-model="value"
@@ -154,7 +154,8 @@
       <Button type="error" long style="margin-top: 20px" @click="value = false"
         >取消</Button
       >
-    </Drawer>
+    </Drawer> -->
+    <draw ref="draw" @addUser="addUser"></draw>
     <Modal v-model="showModal" title="设置权限" @on-ok="determineAuthority">
       <p>正在给{{ setAuthorityUser.name }}设置权限</p>
       <CheckboxGroup
@@ -184,6 +185,7 @@
 
 <script>
 import api from '../../api/http';
+import dra from '../../components/Drawer';
 
 export default {
   name: 'userManage',
@@ -245,14 +247,14 @@ export default {
       editUsername: '',
       editPassword: '',
       editIndex: -1,
-      value: false,
-      addId: '',
-      addName: '',
-      addSchool: '',
-      addPhone: '',
-      addMail: '',
-      addUsername: '',
-      addPassword: '',
+      // value: false,
+      // addId: '',
+      // addName: '',
+      // addSchool: '',
+      // addPhone: '',
+      // addMail: '',
+      // addUsername: '',
+      // addPassword: '',
       searchCont: '',
       pageSize: 3,
       pageNum: 1,
@@ -272,6 +274,9 @@ export default {
       checkArr2: [],
       userRoleIndex: 0
     };
+  },
+  components: {
+    draw: dra
   },
   methods: {
     editClick(row, index) {
@@ -326,36 +331,37 @@ export default {
         .catch(() => {
           console.log('删除失败！');
         });
-      api
-        .getLength()
-        .then(res => {
-          this.userLength = res.data.length;
-        })
-        .catch(() => {
-          console.log('返回失败！');
-        });
-      api
-        .getUser(this.pageNum, this.pageSize)
-        .then(res => {
-          this.userArr = res.data;
-        })
-        .catch(() => {
-          console.log('返回失败！');
-        });
+      // api
+      //   .getLength()
+      //   .then(res => {
+      //     this.userLength = res.data.length;
+      //   })
+      //   .catch(() => {
+      //     console.log('返回失败！');
+      //   });
+      // api
+      //   .getUser(this.pageNum, this.pageSize)
+      //   .then(res => {
+      //     this.userArr = res.data;
+      //   })
+      //   .catch(() => {
+      //     console.log('返回失败！');
+      //   });
+      location.reload();
     },
     addUser() {
       api
         .addUser({
           id: Date.now(),
-          name: this.addName,
-          school: this.addSchool,
-          phone: this.addPhone,
-          mail: this.addMail,
-          username: this.addUsername,
-          password: this.addPassword
+          name: this.$refs.draw.addName,
+          school: this.$refs.draw.addSchool,
+          phone: this.$refs.draw.addPhone,
+          mail: this.$refs.draw.addMail,
+          username: this.$refs.draw.addUsername,
+          password: this.$refs.draw.addPassword
         })
         .then(res => {
-          this.value = false;
+          this.$refs.draw.value = false;
           console.log(res.data);
         })
         .catch(() => {
@@ -379,12 +385,14 @@ export default {
         });
     },
     initDrawer() {
-      this.value = true;
-      this.addId = '';
-      this.addName = '';
-      this.addSchool = '';
-      this.addPhone = '';
-      this.addMail = '';
+      this.$refs.draw.value = true;
+      this.$refs.draw.addId = '';
+      this.$refs.draw.addName = '';
+      this.$refs.draw.addSchool = '';
+      this.$refs.draw.addPhone = '';
+      this.$refs.draw.addMail = '';
+      this.$refs.draw.addUsername = '';
+      this.$refs.draw.addPassword = '';
     },
     searchUser() {
       api
@@ -597,8 +605,5 @@ export default {
   button {
     margin-right: 10px;
   }
-}
-.item {
-  margin-bottom: 10px;
 }
 </style>
